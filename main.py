@@ -60,7 +60,7 @@ class BlogPost(db.Model):
     author_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     author: Mapped["User"] = relationship(back_populates="post")
     img_url = db.Column(db.String(250), nullable=False)
-    comments_from_post: Mapped[List["Comment"]] = relationship(back_populates="post_with_comment")
+    comments_from_post: Mapped[List["Comment"]] = relationship(back_populates="post_with_comment", cascade="all, delete")
 
 
 class User(UserMixin, db.Model):
