@@ -9,14 +9,14 @@ from .auth.view import login_blueprint
 from dotenv import load_dotenv
 from .models import User, BlogPost, db
 from .post.view import post_blueprint
-from .utils import login_manager
+from .utils import *
 
 
 def create_app():
     load_dotenv()
     app = Flask(__name__)
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
     ckeditor = CKEditor(app)
     Bootstrap5(app)
 

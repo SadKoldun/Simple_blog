@@ -1,5 +1,5 @@
 from typing import List
-
+from sqlalchemy import create_engine
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 
@@ -7,14 +7,10 @@ from sqlalchemy import ForeignKey, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
-class Base(DeclarativeBase):
-    pass
-
-
 db = SQLAlchemy()
 
 
-class BlogPost(Base):
+class BlogPost(db.Model):
     __tablename__ = "blog_posts"
     id: Mapped[int] = mapped_column(primary_key=True)
     title = mapped_column(String(250), unique=True, nullable=False)
@@ -27,7 +23,7 @@ class BlogPost(Base):
     comments_from_post: Mapped[List["Comment"]] = relationship(back_populates="post_with_comment", cascade="all, delete")
 
 
-class User(UserMixin, Base):
+class User(UserMixin, db.Model):
     __tablename__ = "user"
     id: Mapped[int] = mapped_column(primary_key=True)
     email = mapped_column(String(250), unique=True, nullable=False)
@@ -37,7 +33,7 @@ class User(UserMixin, Base):
     user_comments: Mapped[List['Comment']] = relationship(back_populates="comment_author")
 
 
-class Comment(Base):
+class Comment(db.Model):
     __tablename__ = "comments"
     id: Mapped[int] = mapped_column(primary_key=True)
     text = mapped_column(String(250), unique=True, nullable=False)
