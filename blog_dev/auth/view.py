@@ -1,8 +1,8 @@
 from flask import render_template, redirect, url_for, flash, Blueprint
 from flask_login import login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from login.login_forms import RegisterForm, LoginForm
-from models import User, db
+from blog_dev.auth.login_forms import RegisterForm, LoginForm
+from blog_dev.models import User, db
 
 
 login_blueprint = Blueprint('login_blueprint', __name__, template_folder='templates')
@@ -16,7 +16,7 @@ def register():
         user = result.scalar()
         if user:
             flash("You've already signed up with that email, log in instead!")
-            return redirect(url_for('login_blueprint.login'))
+            return redirect(url_for('login_blueprint.auth'))
         new_user = User(
             email=register_form.email.data,
             password=generate_password_hash(register_form.password.data, method='pbkdf2:sha256', salt_length=8),
@@ -25,7 +25,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
-        return redirect(url_for("get_all_posts"))
+        return redirect(url_for("main_blueprint.get_all_posts"))
     return render_template("register.html", form=register_form)
 
 
@@ -45,11 +45,11 @@ def login():
             return redirect(url_for('login_blueprint.login'))
         else:
             login_user(user)
-            return redirect(url_for('get_all_posts'))
+            return redirect(url_for('main_blueprint.get_all_posts'))
     return render_template("login.html", form=login_form)
 
 
 @login_blueprint.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('get_all_posts'))
+    return redirect(url_for('main_blueprint.get_all_posts'))

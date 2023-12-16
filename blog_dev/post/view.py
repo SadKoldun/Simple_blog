@@ -1,9 +1,9 @@
 from datetime import date
 from flask import render_template, redirect, url_for, Blueprint
 from flask_login import current_user
-from post.post_forms import CreatePostForm, CommentForm
-from models import Comment, BlogPost, db
-from utils import admin_only
+from blog_dev.post.post_forms import CreatePostForm, CommentForm
+from blog_dev.models import Comment, BlogPost, db
+from blog_dev.utils import admin_only
 
 post_blueprint = Blueprint('post_blueprint', __name__, template_folder='templates')
 
@@ -39,7 +39,7 @@ def add_new_post():
         )
         db.session.add(new_post)
         db.session.commit()
-        return redirect(url_for("get_all_posts"))
+        return redirect(url_for("main_blueprint.get_all_posts"))
     return render_template("make-post.html", form=form)
 
 
@@ -61,7 +61,7 @@ def edit_post(post_id):
         post.author = current_user
         post.body = edit_form.body.data
         db.session.commit()
-        return redirect(url_for("show_post", post_id=post.id))
+        return redirect(url_for("post_blueprint.show_post", post_id=post.id))
     return render_template("make-post.html", form=edit_form, is_edit=True)
 
 
@@ -71,4 +71,4 @@ def delete_post(post_id):
     post_to_delete = db.get_or_404(BlogPost, post_id)
     db.session.delete(post_to_delete)
     db.session.commit()
-    return redirect(url_for('get_all_posts'))
+    return redirect(url_for('main_blueprint.get_all_posts'))
