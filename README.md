@@ -1,5 +1,3 @@
-Простая реализация блога на Flask
-Реализована регистрация новых пользователей, логин, оставление комментарий.
-Пользователь с правами администратора (id=1) имеет возможность создавать и удалять посты, а также редактировать существующие.
-
-Развернут на бесплатном тарифе хостинга render.com по ссылке: https://simple-blog-ywyi.onrender.com
+A simple blog created with Flask.
+Implemented registration of new users, login, comments.
+An admin user (id=1) has the ability to create, edit and delete posts.
